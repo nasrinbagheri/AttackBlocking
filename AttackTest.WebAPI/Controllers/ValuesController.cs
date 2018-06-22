@@ -30,7 +30,7 @@ namespace AttackTest.WebAPI.Controllers
         public async Task<IHttpActionResult> Get(int id)
         {
             var originIP = "0.0.0.1";
-            // var ip = HttpContext.Current != null ? HttpContext.Current.Request.UserHostAddress : "";
+            
             var ip = IPAddress.Parse(originIP);
 
             return await Hacker.DefendAsync<IHttpActionResult>(
@@ -48,9 +48,9 @@ namespace AttackTest.WebAPI.Controllers
                 }
             },
                blocked => new ResponseMessageResult(new HttpResponseMessage(HttpStatusCode.Forbidden)),
-               "ValidLogin:" + id, MaxValidLogin, MaxValidLoginInterval,
-               "InvalidLogin:" + id, MaxInvalidLogin, MaxInvalidLoginInterval,
-               ip
+               validActionKey: "ValidLogin:" + id, maxValidAttempt: MaxValidLogin, validAttemptInterval: MaxValidLoginInterval,
+               invalidActionKey: "InvalidLogin:" + id, maxInvalidAttempt: MaxInvalidLogin, invalidAttemptInterval: MaxInvalidLoginInterval,
+               origin: ip
            );
 
         }
